@@ -68,5 +68,63 @@ describe('Username lower than 6 and longer than 30.  ', () => {
 
 //password
 
+describe('password check', () => {
+    test('Password has to be at least 8 characters long.', async () => {
+        const response = await request(app).post('/users').send({
+            username: 'Username',
+            password: 'Pass'
+        })
+        expect(response.statusCode).toBe(400)
 
+    })
+
+    test('Password should contain at least one lowercase and one uppercase letter.', async () => {
+        const response = await request(app).post('/users').send({
+            username: 'Username',
+            password: 'password123'
+        })
+        expect(response.statusCode).toBe(400)
+        const response2 = await request(app).post('/users').send({
+            username: 'Username',
+            password: 'PASSWORD123'
+        })
+        expect(response2.statusCode).toBe(400)
+        const response3 = await request(app).post('/users').send({
+            username: 'Username',
+            password: 'Password123'
+        })
+        expect(response3.statusCode).toBe(200)
+
+    })
+
+
+    test('Password should contain at least one number.', async () => {
+        const response = await request(app).post('/users').send({
+            username: 'Username',
+            password: 'Password123'
+        })
+        expect(response.statusCode).toBe(200)
+        const response2 = await request(app).post('/users').send({
+            username: 'Username',
+            password: 'Password'
+        })
+        expect(response2.statusCode).toBe(400)
+
+    })
+
+
+    test('Password should not contain any special characters.', async () => {
+        const response = await request(app).post('/users').send({
+            username: 'Username',
+            password: 'Password123'
+        })
+        expect(response.statusCode).toBe(200)
+        const response2 = await request(app).post('/users').send({
+            username: 'Username',
+            password: 'Passw$#ord123'
+        })
+        expect(response2.statusCode).toBe(400)
+
+    })
+})
 
